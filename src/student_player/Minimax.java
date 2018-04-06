@@ -5,7 +5,7 @@ import tablut.TablutMove;
 
 class Minimax{
 	enum PlayerType { MAX, MIN }
-	static private final int MAX_DEPTH = 3;
+	static private final int MAX_DEPTH = 4;
 	static private final Node DEFAULT_ALPHA = new Node(Float.NEGATIVE_INFINITY);
 	static private final Node DEFAULT_BETA = new Node(Float.POSITIVE_INFINITY);
 	
