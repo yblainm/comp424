@@ -5,7 +5,7 @@ import tablut.TablutMove;
 
 class Minimax{
 	enum PlayerType { MAX, MIN }
-	static private final int MAX_DEPTH = 4;
+	static private final int MAX_DEPTH = 3;
 	static private final Node DEFAULT_ALPHA = new Node(Float.NEGATIVE_INFINITY);
 	static private final Node DEFAULT_BETA = new Node(Float.POSITIVE_INFINITY);
 	
@@ -32,7 +32,7 @@ class Minimax{
 	
 	static private Node alphaBetaMax(Node state, Node alpha, Node beta){
 		if(state.getDepth()==MAX_DEPTH){
-			state.evaluate(null);
+			state.evaluate();
 			return state;
 		}
 		
@@ -48,7 +48,7 @@ class Minimax{
 	
 	static private Node alphaBetaMin(Node state, Node alpha, Node beta){
 		if(state.getDepth()==MAX_DEPTH){
-			state.evaluate(null);
+			state.evaluate();
 			return state;
 		}
 		
@@ -97,8 +97,8 @@ class Minimax{
 			score = null;
 		}
 		
-		void evaluate(Evaluator pEvaluator){
-			score = pEvaluator.evaluate(getBoardState());
+		void evaluate(){
+			score = MyTools.evaluate(getBoardState());
 		}
 	}
 }
