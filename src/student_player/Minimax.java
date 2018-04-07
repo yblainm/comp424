@@ -1,11 +1,12 @@
 package student_player;
 
+import boardgame.Board;
 import tablut.TablutBoardState;
 import tablut.TablutMove;
 
 class Minimax{
 	enum PlayerType { MAX, MIN }
-	static private final int MAX_DEPTH = 4;
+	static private final int MAX_DEPTH = 3;
 	static private final Node DEFAULT_ALPHA = new Node(Float.NEGATIVE_INFINITY);
 	static private final Node DEFAULT_BETA = new Node(Float.POSITIVE_INFINITY);
 	
@@ -23,15 +24,17 @@ class Minimax{
 		else {
 			result = alphaBetaMin(new Node(pRootState), DEFAULT_ALPHA, DEFAULT_BETA);
 		}
-		do{
-			result = result.getParent();
-		} while (result.getDepth() != 1);
+		if(result.getDepth() != 1) {
+			do{
+				result = result.getParent();
+			} while (result.getDepth() != 1);
+		}
 		
 		return result.getPreviousMove();
 	}
 	
 	static private Node alphaBetaMax(Node state, Node alpha, Node beta){
-		if(state.getDepth()==MAX_DEPTH){
+		if(isNodeCutoff(state)){
 			state.evaluate();
 			return state;
 		}
@@ -47,7 +50,7 @@ class Minimax{
 	}
 	
 	static private Node alphaBetaMin(Node state, Node alpha, Node beta){
-		if(state.getDepth()==MAX_DEPTH){
+		if(isNodeCutoff(state)){
 			state.evaluate();
 			return state;
 		}
@@ -63,7 +66,11 @@ class Minimax{
 		return minBeta;
 	}
 	
-	static private class Node{
+	static private boolean isNodeCutoff(Node state) {
+		return state.getDepth()==MAX_DEPTH || state.getBoardState().getWinner() != Board.NOBODY;
+	}
+	
+	static class Node{
 		private int depth;
 		private TablutBoardState boardState;
 		private TablutMove previousMove;
@@ -98,7 +105,7 @@ class Minimax{
 		}
 		
 		void evaluate(){
-			score = MyTools.evaluate(getBoardState());
+			score = MyTools.evaluate(this);
 		}
 	}
 }
