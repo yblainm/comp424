@@ -7,6 +7,8 @@ import tablut.TablutBoardState;
 
 public class MyTools {
 	
+	private static final float SCORE_WIN_MAX = 100000f;
+	private static final float SCORE_WIN_MIN = -5f; //Offset by depth, pick closest move first (assuming depth at most 5)
 	private static final int DEFAULT_PIECES_SWEDE = 9;
 	private static final int DEFAULT_PIECES_MUSCOVITE = 16;
 	private static final int PIECES_CONSTANT = DEFAULT_PIECES_SWEDE*DEFAULT_PIECES_MUSCOVITE;
@@ -17,9 +19,9 @@ public class MyTools {
     	if(boardState.gameOver()) {
     		int winner = boardState.getWinner();
     		if(winner==TablutBoardState.SWEDE) {
-    			return -5f + state.getDepth();
+    			return SCORE_WIN_MIN + state.getDepth();
     		} else if(winner==TablutBoardState.MUSCOVITE){
-    			return 100000f;
+    			return SCORE_WIN_MAX;
     		}
     	}
         return 1f * (kingCornerDistance(boardState) * pieceAdvantage(boardState));
@@ -30,7 +32,8 @@ public class MyTools {
     }
     
     private static int pieceAdvantage(TablutBoardState pBoardState) {
-    	return DEFAULT_PIECES_MUSCOVITE * (DEFAULT_PIECES_SWEDE - pBoardState.getNumberPlayerPieces(TablutBoardState.SWEDE)) + DEFAULT_PIECES_SWEDE * pBoardState.getNumberPlayerPieces(TablutBoardState.MUSCOVITE); /*PIECES_CONSTANT - DEFAULT_PIECES_MUSCOVITE*pBoardState.getNumberPlayerPieces(TablutBoardState.SWEDE)
+    	return DEFAULT_PIECES_MUSCOVITE * (DEFAULT_PIECES_SWEDE - pBoardState.getNumberPlayerPieces(TablutBoardState.SWEDE)) +
+    			DEFAULT_PIECES_SWEDE * pBoardState.getNumberPlayerPieces(TablutBoardState.MUSCOVITE); /*PIECES_CONSTANT - DEFAULT_PIECES_MUSCOVITE*pBoardState.getNumberPlayerPieces(TablutBoardState.SWEDE)
     			+ DEFAULT_PIECES_SWEDE * pBoardState.getNumberPlayerPieces(TablutBoardState.MUSCOVITE)*/
     }
     
