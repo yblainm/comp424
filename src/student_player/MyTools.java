@@ -44,69 +44,72 @@ public class MyTools {
     }
     
     private static int kingSafety(TablutBoardState pBoardState) {
-    	Piece[][] kingNeighbors = getKingNeighborPieces(pBoardState);
+    	PiecesWithWall[][] kingNeighbors = getKingNeighborPieces(pBoardState);
     	
     	return 100 + scoreEnemyHalfSandwich(kingNeighbors) + scoreOneCorner(kingNeighbors) + scoreTwoCorners(kingNeighbors) + scoreThreeCorners(kingNeighbors) 
     		+ scoreFourCorners(kingNeighbors);
     }
     
-    private static int scoreFourCorners(Piece[][] kingNeighbors) {
+    private static int scoreFourCorners(PiecesWithWall[][] kingNeighbors) {
 		// TODO Auto-generated method stub
 		return getCornerWhiteCount(kingNeighbors) == 4 ? -10 : 0;
 	}
 
-	private static int scoreThreeCorners(Piece[][] kingNeighbors) {
+	private static int scoreThreeCorners(PiecesWithWall[][] kingNeighbors) {
 		// TODO Auto-generated method stub
 		return getCornerWhiteCount(kingNeighbors) == 3 ? -30 : 0;
 	}
 
-	private static int scoreTwoCorners(Piece[][] kingNeighbors) {
-		if(kingNeighbors[0][0] == Piece.WHITE && kingNeighbors[2][2] == Piece.WHITE && !(kingNeighbors[0][2] == Piece.WHITE) && !(kingNeighbors[2][0] == Piece.WHITE) ||
-				!(kingNeighbors[0][0] == Piece.WHITE) && !(kingNeighbors[2][2] == Piece.WHITE) && kingNeighbors[0][2] == Piece.WHITE && kingNeighbors[2][0] == Piece.WHITE) {
+	private static int scoreTwoCorners(PiecesWithWall[][] kingNeighbors) {
+		if(kingNeighbors[0][0] == PiecesWithWall.WHITE && kingNeighbors[2][2] == PiecesWithWall.WHITE 
+				&& !(kingNeighbors[0][2] == PiecesWithWall.WHITE) && !(kingNeighbors[2][0] == PiecesWithWall.WHITE) 
+				|| !(kingNeighbors[0][0] == PiecesWithWall.WHITE) && !(kingNeighbors[2][2] == PiecesWithWall.WHITE) 
+				&& kingNeighbors[0][2] == PiecesWithWall.WHITE && kingNeighbors[2][0] == PiecesWithWall.WHITE) {
 			return -50;
 		}
 		return 0;
 	}
 
-	private static int scoreOneCorner(Piece[][] kingNeighbors) {
+	private static int scoreOneCorner(PiecesWithWall[][] kingNeighbors) {
 		return getCornerWhiteCount(kingNeighbors) == 1 ? -20 : 0;
 	}
 
-	private static int scoreEnemyHalfSandwich(Piece[][] kingNeighbors) {
+	private static int scoreEnemyHalfSandwich(PiecesWithWall[][] kingNeighbors) {
 		int result = 0;
 		
-		if(kingNeighbors[0][1] == Piece.BLACK && kingNeighbors[2][1] == Piece.EMPTY || 
-				kingNeighbors[0][1] == Piece.EMPTY && kingNeighbors[2][1] == Piece.BLACK) {
+		if(kingNeighbors[0][1] == PiecesWithWall.BLACK && kingNeighbors[2][1] == PiecesWithWall.EMPTY || 
+				kingNeighbors[0][1] == PiecesWithWall.EMPTY && kingNeighbors[2][1] == PiecesWithWall.BLACK) {
 			result += 50;
 		}
 		
-		if(kingNeighbors[1][0] == Piece.BLACK && kingNeighbors[1][2] == Piece.EMPTY || 
-				kingNeighbors[1][0] == Piece.EMPTY && kingNeighbors[1][2] == Piece.BLACK) {
+		if(kingNeighbors[1][0] == PiecesWithWall.BLACK && kingNeighbors[1][2] == PiecesWithWall.EMPTY || 
+				kingNeighbors[1][0] == PiecesWithWall.EMPTY && kingNeighbors[1][2] == PiecesWithWall.BLACK) {
 			result += 50;
 		}
 		
 		return result;
 	}
 	
-	private static int getCornerWhiteCount(Piece[][] kingNeighbors) {
+	private static int getCornerWhiteCount(PiecesWithWall[][] kingNeighbors) {
 		int count = 0;
 		for(int[] n : DIAGONAL_NEIGHBORS) {
-				if(kingNeighbors[n[0]][n[1]] == Piece.WHITE) {
+				if(kingNeighbors[n[0]][n[1]] == PiecesWithWall.WHITE) {
 					count++;
 				}
 		}
 		return count;
 	}
 
-	public static Piece[][] getKingNeighborPieces(TablutBoardState pBoardState){
+	public static PiecesWithWall[][] getKingNeighborPieces(TablutBoardState pBoardState){
     	Coord kingCoord = pBoardState.getKingPosition();
-    	Piece[][] neighbors = new Piece[3][3];
+    	PiecesWithWall[][] neighbors = new PiecesWithWall[3][3];
     	
     	for(int i = -1; i < 2; i++) {
     		for(int j = -1; j < 2; j++) {
     			try {
-    				neighbors[i+1][j+1] = pBoardState.getPieceAt(kingCoord.x + i, kingCoord.y + j);
+    				neighbors[i+1][j+1] = PiecesWithWall.valueOf(pBoardState.getPieceAt(kingCoord.x + i, kingCoord.y + j).name());
     			} catch (IndexOutOfBoundsException e) {
+    				neighbors[i+1][j+1] = PiecesWithWall.WALL;
 //    				System.out.println("Turn "+pBoardState.getTurnNumber());
 //    				System.out.println((kingCoord.x + i) +", " + (kingCoord.y + j));
 //    				System.out.println(neighbors[i+1][j+1]==null);
@@ -114,6 +117,6 @@ public class MyTools {
     		}
     	}
     	
-		return null;
+		return neighbors;
     }
 }
